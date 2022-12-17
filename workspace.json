@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "projects": {
+    "micro1": "apps/micro1"
+  }
+}

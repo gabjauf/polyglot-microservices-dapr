@@ -1,0 +1,21 @@
+{
+  "name": "app2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "dapr run --app-id app3 --config config.yaml --app-port 3001 --dapr-http-port 3501 ts-node-dev index.ts",
+    "stop": "dapr stop --app-id app3"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dapr/dapr": "^2.5.0",
+    "fastify": "^4.10.2",
+    "ts-node-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}

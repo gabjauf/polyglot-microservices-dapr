@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+
+[scripts]
+start = "dapr run --app-id appPython --app-port 5000 --dapr-http-port 3502 python hello-world.py"
+stop = "dapr stop --app-id appPython"
