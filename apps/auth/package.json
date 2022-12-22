@@ -1,0 +1,24 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "dapr run --app-id auth --config config.yaml --app-port 3002 --dapr-http-port 3501 ts-node-dev index.ts",
+    "stop": "dapr stop --app-id auth"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dapr/dapr": "^2.5.0",
+    "@fastify/cors": "^8.2.0",
+    "@fastify/formbody": "^7.4.0",
+    "fastify": "^4.10.2",
+    "supertokens-node": "^12.1.3",
+    "ts-node-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}
