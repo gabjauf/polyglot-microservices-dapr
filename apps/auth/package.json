@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "dapr run --app-id auth --config config.yaml --app-port 3002 --dapr-http-port 3501 ts-node-dev index.ts",
+    "start": "dapr run --app-id auth --config config.yaml --app-port 3002 --dapr-http-port 3502 ts-node-dev index.ts",
     "stop": "dapr stop --app-id auth"
   },
   "author": "",

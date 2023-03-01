@@ -1,0 +1,9 @@
+language: 'javascript'
+
+tasks:
+    start:
+        command: 'dapr run --app-id app2 --app-port 3000 --dapr-http-port 3500 node index.js'
+        platform: 'system'
+    stop:
+        command: 'dapr stop --app-id app2'
+        platform: 'system'

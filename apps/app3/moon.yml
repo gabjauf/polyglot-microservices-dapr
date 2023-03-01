@@ -1,0 +1,9 @@
+language: 'typescript'
+
+tasks:
+    start:
+        command: 'dapr run --app-id app3 --config config.yaml --app-port 3001 --dapr-http-port 3501 npx ts-node-dev index.ts'
+        platform: 'system'
+    stop:
+        command: 'dapr stop --app-id app3'
+        platform: 'system'

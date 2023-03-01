@@ -7,6 +7,10 @@ import formDataPlugin from "@fastify/formbody";
 import { errorHandler } from "supertokens-node/framework/fastify";
 import Dashboard from "supertokens-node/recipe/dashboard";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
+import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
+import UserRoles from "supertokens-node/recipe/userroles";
+import {UserRoleClaim, PermissionClaim} from "supertokens-node/recipe/userroles";
+import {SessionContainer} from "supertokens-node/recipe/session"
 
 import fastifyImport from "fastify";
 // CommonJs
@@ -38,11 +42,40 @@ supertokens.init({
     websiteBasePath: "/login"
   },
   recipeList: [
-    Session.init(),
-    EmailPassword.init(),
+    Session.init({
+      jwt: {
+        enable: true,
+      },
+    }),
+    EmailPassword.init({
+      override: {
+        apis: (originalImplementation) => {
+          return {
+            ...originalImplementation,
+            signUpPOST: async function (input) {
+
+              if (originalImplementation.signUpPOST === undefined) {
+                throw Error("Should never come here");
+              }
+
+              // First we call the original implementation of signUpPOST.
+              let response = await originalImplementation.signUpPOST(input);
+
+              // Post sign up response, we check if it was successful
+              if (response.status === "OK") {
+                let { id, email } = response.user;
+                await UserRoles.addRoleToUser(id, "user");
+              }
+              return response;
+            }
+          }
+        }
+      }
+    }),
     Dashboard.init({
       apiKey: "keykeykey"
     }),
+    UserRoles.init(),
   ]
 });
 
@@ -74,8 +107,28 @@ fastify.get('/', async (request, reply) => {
   return { hello: 'app3' }
 })
 
+fastify.get("/myApi", {
+  preHandler: verifySession({
+    overrideGlobalClaimValidators: async (globalValidators) => [
+      ...globalValidators,
+      // UserRoles.UserRoleClaim.validators.includes("user"),
+    ],
+  }),
+}, async (req: any, res) => {
+  let session = req.session;
+
+  let accessTokenPayload = session.getAccessTokenPayload();
+  let customClaimValue = accessTokenPayload.customClaim;
+  console.log(accessTokenPayload, session);
+  return;
+});
+
 fastify.get('/testApp2', async (request, reply) => {
   return client.invoker.invoke('app2', '/', HttpMethod.GET).catch(e => e)
+})
+
+fastify.get('/userRoles', async (request, reply) => {
+  return UserRoles.getAllRoles();
 })
 
 fastify.get('/testAppPython', async (request, reply) => {
@@ -101,6 +154,8 @@ const start = async () => {
   try {
     await fastify.register(formDataPlugin);
     await fastify.register(plugin);
+    await UserRoles.createNewRoleOrAddPermissions("user", ["read"]);
+    await UserRoles.createNewRoleOrAddPermissions("admin", ["read", "write"]);
     await fastify.listen({ port: 3002 });
   } catch (err) {
     fastify.log.error(err)

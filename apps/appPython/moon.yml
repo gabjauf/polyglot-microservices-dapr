@@ -1,0 +1,9 @@
+language: 'python'
+
+tasks:
+    start:
+        command: 'dapr run --app-id appPython --app-port 5000 --dapr-http-port 3503 pipenv run start'
+        platform: 'system'
+    stop:
+        command: 'dapr stop --app-id appPython'
+        platform: 'system'
