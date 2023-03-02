@@ -1,0 +1,11 @@
+language: 'javascript'
+
+tasks:
+    build:
+        command: 'strapi build'
+    start:
+        command: 'dapr run --app-id strapi --app-port 1337 --dapr-http-port 3504 npx strapi develop'
+        platform: 'system'
+    stop: 
+        command: 'dapr stop --app-id strapi'
+        platform: 'system'
